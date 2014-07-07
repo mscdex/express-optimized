@@ -7,6 +7,9 @@
   "scripts": {
     "test": "node test/tests.js"
   },
+  "dependencies": {
+    "path-to-regexp": "0.2.2"
+  },
   "keywords": [ "optimized", "express" ],
   "licenses": [ { "type": "MIT", "url": "https://github.com/mscdex/express-optimized/raw/master/LICENSE" } ],
   "repository": { "type": "git", "url": "https://github.com/mscdex/express-optimized.git" }

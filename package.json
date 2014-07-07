@@ -1,0 +1,13 @@
+{ "name": "express-optimized",
+  "version": "0.0.0",
+  "author": "Brian White <mscdex@mscdex.net>",
+  "description": "A minimal, optimized version of Express.",
+  "main": "./lib/router",
+  "engines": { "node": ">=0.10.0" },
+  "scripts": {
+    "test": "node test/tests.js"
+  },
+  "keywords": [ "optimized", "express" ],
+  "licenses": [ { "type": "MIT", "url": "https://github.com/mscdex/express-optimized/raw/master/LICENSE" } ],
+  "repository": { "type": "git", "url": "https://github.com/mscdex/express-optimized.git" }
+}

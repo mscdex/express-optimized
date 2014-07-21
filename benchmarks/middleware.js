@@ -2,7 +2,6 @@ var http = require('http');
 var Router = require('../lib/router');
 
 var app = Router();
-http.createServer(app.handler).listen(3333);
 
 // number of middleware
 
@@ -21,3 +20,5 @@ app.use(function(req, res, next){
   res.statusCode = 200;
   res.end(body);
 });
+
+http.createServer(app.handler).listen(3333);

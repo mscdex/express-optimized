@@ -187,6 +187,42 @@ var tests = [
     },
     what: 'GET (param handler)'
   },
+  { run: function() {
+      var what = this.what,
+          router = Router();
+
+      router.get('/foo', function(req, res, next) {
+        res.statusCode = 200;
+        res.write('hello from first GET handler\n');
+        next();
+      });
+      router.use('/foo', function(req, res, next) {
+        res.write('hello from intermediate middleware\n');
+        next();
+      });
+      router.get('/foo', function(req, res, next) {
+        res.end('hello from second GET handler');
+      });
+
+      request(router, this.req, function(err, res) {
+        assert(!err, makeMsg(what, 'Unexpected error: ' + err));
+        assert(res.statusCode === 200,
+               makeMsg(what, 'Wrong response statusCode: ' + res.statusCode));
+        assert(res.data === [
+                 'hello from first GET handler',
+                 'hello from intermediate middleware',
+                 'hello from second GET handler'
+               ].join('\n'),
+               makeMsg(what, 'Wrong response: ' + inspect(res.data)));
+        next();
+      });
+    },
+    req: {
+      method: 'GET',
+      path: '/foo'
+    },
+    what: 'method and middleware order'
+  },
 ];
 
 function request(router, reqOpts, cb) {

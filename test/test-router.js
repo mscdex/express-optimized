@@ -223,6 +223,43 @@ var tests = [
     },
     what: 'method and middleware order'
   },
+  { run: function() {
+      var what = this.what,
+          router = Router();
+
+      function firstHandler(req, res, next) {
+        res.statusCode = 200;
+        res.write('hello from first GET handler\n');
+        next();
+      }
+      function secondHandler(req, res, next) {
+        res.write('hello from second GET handler\n');
+        next();
+      }
+      function thirdHandler(req, res, next) {
+        res.end('hello from third GET handler');
+      }
+      router.get('/foo', firstHandler, secondHandler, thirdHandler);
+
+      request(router, this.req, function(err, res) {
+        assert(!err, makeMsg(what, 'Unexpected error: ' + err));
+        assert(res.statusCode === 200,
+               makeMsg(what, 'Wrong response statusCode: ' + res.statusCode));
+        assert(res.data === [
+                 'hello from first GET handler',
+                 'hello from second GET handler',
+                 'hello from third GET handler'
+               ].join('\n'),
+               makeMsg(what, 'Wrong response: ' + inspect(res.data)));
+        next();
+      });
+    },
+    req: {
+      method: 'GET',
+      path: '/foo'
+    },
+    what: 'multiple middleware in single call'
+  },
 ];
 
 function request(router, reqOpts, cb) {

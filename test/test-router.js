@@ -260,6 +260,31 @@ var tests = [
     },
     what: 'multiple middleware in single call'
   },
+  { run: function() {
+      var what = this.what,
+          router = Router(),
+          subrouter = Router();
+
+      router.use('/foo', subrouter);
+      subrouter.use('/bar', function (req, res) {
+        res.end("i'm foo bar");
+      });
+
+      request(router, this.req, function(err, res) {
+        assert(!err, makeMsg(what, 'Unexpected error: ' + err));
+        assert(res.statusCode === 200,
+               makeMsg(what, 'Wrong response statusCode: ' + res.statusCode));
+        assert(res.data === "i'm foo bar",
+               makeMsg(what, 'Wrong response: ' + inspect(res.data)));
+        next();
+      });
+    },
+    req: {
+      method: 'GET',
+      path: '/foo/bar'
+    },
+    what: 'router mounted on a router'
+  },
 ];
 
 function request(router, reqOpts, cb) {
